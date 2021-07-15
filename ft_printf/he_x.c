@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
+
 int		ft_tolower(int c)
 {
 	if (c >= 'A' && c <= 'Z')
@@ -79,36 +80,34 @@ char* ft_atoi_base(unsigned long long int number, int base)
         num_copy/=base;
     }
     return (base_rep);
-}  
-char* treat_pointer(va_list args)
-{
-    char *str;
-    long long int adress;
-    char *adddress;
-    int* adr;
-    adr = va_arg(args,int*);
-    str = "0x";
-    adress = (long long int)adr;
-    adddress = ft_atoi_base(adress,16);
-    adddress = convert_to_lower(adddress);
-    adddress = ft_strjoin(str,adddress);
-    return adddress;
-} 
+}
 
+int treat_hex(va_list args)
+{
+    int num;
+    char* hex;
+    size_t i;
+    size_t len;
+    
+    i = 0;
+    num = va_arg(args,int);
+    hex = ft_atoi_base(num,16);
+    len = ft_strlen(hex);
+     while(i < len){
+        write(1,&hex[i],1);
+        i++;
+    }
+    return 0;
+}
 int variadic(char *str,...)
 {
-    char *str;
-
-    printf("%s\n",str);
     va_list args;
 	va_start(args, str);
-    str = treat_pointer(args);
-    return (int)ft_strlen(str);
+    treat_hex(args);
+    return 0;
 }
 int main()
 {
-    int m = 7;
-    printf("adress in main : %p \n",&m);
-    variadic("hello",&m);
-    return 0;
+    variadic("hello",200);
+    return(0);
 }
